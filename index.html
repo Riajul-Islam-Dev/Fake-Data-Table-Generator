@@ -6,12 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fake Data Table</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <!-- Bootstrap CSS for toggle switch -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f1f1f1;
             margin: 0;
             padding: 0;
+            background-color: #fff;
+            /* Default background color */
+            color: #333;
+            /* Default text color */
+        }
+
+        body.dark-mode {
+            background-color: #333;
+            /* Dark mode background color */
+            color: #fff;
+            /* Dark mode text color */
         }
 
         #container {
@@ -38,6 +50,8 @@
         th,
         td {
             border: 1px solid #e6e6e6;
+            color: #333;
+            /* Text color */
         }
 
         th {
@@ -46,24 +60,16 @@
             cursor: pointer;
         }
 
-        th,
-        td {
-            padding: 12px;
-            text-align: left;
-        }
-
         th i {
             margin-left: 5px;
         }
 
         th.sorted-asc i::before {
             content: "\25B2";
-            /* Unicode character for ▲ */
         }
 
         th.sorted-desc i::before {
             content: "\25BC";
-            /* Unicode character for ▼ */
         }
 
         tr:nth-child(even) {
@@ -93,10 +99,44 @@
         .download-icon {
             margin-right: 10px;
         }
+
+        /* Bootstrap Toggle Switch Styles */
+        .custom-control-label::before {
+            background-color: #fff;
+            color: #333;
+            /* Text color */
+        }
+
+        .custom-control-input:checked~.custom-control-label::before {
+            background-color: #000;
+        }
+
+        .custom-control-label::after {
+            background-color: #000;
+        }
+
+        /* Table Data Text Color for Dark Mode */
+        .dark-mode td {
+            color: #000 !important;
+            /* Black text color in dark mode */
+        }
+
+        /* Dark Mode Toggle Button Styles */
+        .custom-control-label {
+            color: #333;
+            /* Text color */
+        }
+
+        .custom-control-label.dark-mode {
+            background-color: #fff;
+            /* White background in dark mode */
+            color: #000;
+            /* Text color in dark mode */
+        }
     </style>
 </head>
 
-<body>
+<body class="light-mode">
     <div id="container">
         <h1>Fake Data Table</h1>
         <table id="dataTable" class="display">
@@ -117,6 +157,11 @@
         <button class="download-button" id="downloadButton">
             <span class="download-icon">🖨️</span> Download JSON
         </button>
+        <!-- Beautiful Toggle Switch for Dark Mode -->
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="darkModeToggle">
+            <label class="custom-control-label" for="darkModeToggle">Dark Mode</label>
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -170,6 +215,22 @@
             a.download = 'fake_data.json';
             a.click();
             URL.revokeObjectURL(url);
+        });
+
+        // Dark Mode and Light Mode Toggle
+        var darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('change', function () {
+            document.body.classList.toggle('dark-mode', darkModeToggle.checked);
+
+            // Update the toggle button text and background color
+            var toggleLabel = document.querySelector('label[for="darkModeToggle"]');
+            if (darkModeToggle.checked) {
+                toggleLabel.textContent = 'Light Mode';
+                toggleLabel.classList.add('dark-mode');
+            } else {
+                toggleLabel.textContent = 'Dark Mode';
+                toggleLabel.classList.remove('dark-mode');
+            }
         });
     </script>
 </body>
