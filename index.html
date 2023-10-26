@@ -102,14 +102,14 @@
         <table id="dataTable" class="display">
             <thead>
                 <tr id="searchRow">
-                    <th><input class="search-input" type="text" placeholder="Search ID"></th>
-                    <th><input class="search-input" type="text" placeholder="Search Name"></th>
-                    <th><input class="search-input" type="text" placeholder="Search Email"></th>
+                    <th><input class="search-input id-search" type="text" placeholder="Search ID"></th>
+                    <th><input class="search-input name-search" type="text" placeholder="Search Name"></th>
+                    <th><input class="search-input email-search" type="text" placeholder="Search Email"></th>
                 </tr>
                 <tr>
-                    <th class="sortable">ID <i></i></th>
-                    <th class="sortable">Name <i></i></th>
-                    <th class="sortable">Email <i></i></th>
+                    <th class="sortable id-column">ID <i></i></th>
+                    <th class="sortable name-column">Name <i></i></th>
+                    <th class="sortable email-column">Email <i></i></th>
                 </tr>
             </thead>
             <tbody id="output"></tbody>
@@ -118,7 +118,6 @@
             <span class="download-icon">🖨️</span> Download JSON
         </button>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
@@ -152,6 +151,13 @@
 
         // Enable sorting for DataTables
         dataTable.order([[0, 'asc']]);
+
+        // Set search input widths based on column widths
+        $('.search-input').each(function () {
+            var columnIndex = $(this).parent().index();
+            var headerCell = $('th:eq(' + columnIndex + ')');
+            $(this).css('width', headerCell.width() + 'px');
+        });
 
         // Add event listener for the download button
         document.querySelector('#downloadButton').addEventListener('click', function (event) {
