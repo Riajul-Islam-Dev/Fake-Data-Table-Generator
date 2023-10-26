@@ -1,139 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fake Data Table</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <!-- Bootstrap CSS for toggle switch -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #fff;
-            /* Default background color */
-            color: #333;
-            /* Default text color */
-        }
-
-        body.dark-mode {
-            background-color: #333;
-            /* Dark mode background color */
-            color: #fff;
-            /* Dark mode text color */
-        }
-
-        #container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table,
-        th,
-        td {
-            border: 1px solid #e6e6e6;
-            color: #333;
-            /* Text color */
-        }
-
-        th {
-            background-color: #333;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        th i {
-            margin-left: 5px;
-        }
-
-        th.sorted-asc i::before {
-            content: "\25B2";
-        }
-
-        th.sorted-desc i::before {
-            content: "\25BC";
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        tr:hover {
-            background-color: #ddd;
-        }
-
-        .download-button {
-            display: inline-block;
-            margin: 20px auto;
-            text-align: center;
-            background-color: #008CBA;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .download-button:hover {
-            background-color: #00587A;
-        }
-
-        .download-icon {
-            margin-right: 10px;
-        }
-
-        /* Bootstrap Toggle Switch Styles */
-        .custom-control-label::before {
-            background-color: #fff;
-            color: #333;
-            /* Text color */
-        }
-
-        .custom-control-input:checked~.custom-control-label::before {
-            background-color: #000;
-        }
-
-        .custom-control-label::after {
-            background-color: #000;
-        }
-
-        /* Table Data Text Color for Dark Mode */
-        .dark-mode td {
-            color: #000 !important;
-            /* Black text color in dark mode */
-        }
-
-        /* Dark Mode Toggle Button Styles */
-        .custom-control-label {
-            color: #333;
-            /* Text color */
-        }
-
-        .custom-control-label.dark-mode {
-            background-color: #fff;
-            /* White background in dark mode */
-            color: #000;
-            /* Text color in dark mode */
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the external CSS file -->
 </head>
 
 <body class="light-mode">
@@ -157,7 +34,6 @@
         <button class="download-button" id="downloadButton">
             <span class="download-icon">🖨️</span> Download JSON
         </button>
-        <!-- Beautiful Toggle Switch for Dark Mode -->
         <div class="custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" id="darkModeToggle">
             <label class="custom-control-label" for="darkModeToggle">Dark Mode</label>
@@ -189,22 +65,18 @@
 
         var dataTable = $('#dataTable').DataTable();
 
-        // Add individual search boxes for each column
         $('#searchRow input').on('keyup change', function () {
             dataTable.column($(this).parent().index() + ':visible').search(this.value).draw();
         });
 
-        // Enable sorting for DataTables
         dataTable.order([[0, 'asc']]);
 
-        // Set search input widths based on column widths
         $('.search-input').each(function () {
             var columnIndex = $(this).parent().index();
             var headerCell = $('th:eq(' + columnIndex + ')');
             $(this).css('width', headerCell.width() + 'px');
         });
 
-        // Add event listener for the download button
         document.querySelector('#downloadButton').addEventListener('click', function (event) {
             event.preventDefault();
             var jsonOutput = JSON.stringify(data, null, 2);
@@ -217,12 +89,9 @@
             URL.revokeObjectURL(url);
         });
 
-        // Dark Mode and Light Mode Toggle
         var darkModeToggle = document.getElementById('darkModeToggle');
         darkModeToggle.addEventListener('change', function () {
             document.body.classList.toggle('dark-mode', darkModeToggle.checked);
-
-            // Update the toggle button text and background color
             var toggleLabel = document.querySelector('label[for="darkModeToggle"]');
             if (darkModeToggle.checked) {
                 toggleLabel.textContent = 'Light Mode';
