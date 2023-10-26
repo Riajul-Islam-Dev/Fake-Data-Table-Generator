@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Data Table</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #e6e6e6;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th i {
+            margin-left: 5px;
+        }
+
+        th.sorted-asc i::before {
+            content: "\25B2";
+            /* Unicode character for ▲ */
+        }
+
+        th.sorted-desc i::before {
+            content: "\25BC";
+            /* Unicode character for ▼ */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        .download-button {
+            display: inline-block;
+            margin: 20px auto;
+            text-align: center;
+            background-color: #008CBA;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .download-button:hover {
+            background-color: #00587A;
+        }
+
+        .download-icon {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <h1>Fake Data Table</h1>
+        <table id="dataTable" class="display">
+            <thead>
+                <tr id="searchRow">
+                    <th><input class="search-input" type="text" placeholder="Search ID"></th>
+                    <th><input class="search-input" type="text" placeholder="Search Name"></th>
+                    <th><input class="search-input" type="text" placeholder="Search Email"></th>
+                </tr>
+                <tr>
+                    <th class="sortable">ID <i></i></th>
+                    <th class="sortable">Name <i></i></th>
+                    <th class="sortable">Email <i></i></th>
+                </tr>
+            </thead>
+            <tbody id="output"></tbody>
+        </table>
+        <button class="download-button" id="downloadButton">
+            <span class="download-icon">🖨️</span> Download JSON
+        </button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        var data = [];
+        for (var i = 0; i < 100; i++) {
+            var obj = {};
+            obj.id = i + 1;
+            obj.name = faker.name.findName();
+            obj.email = faker.internet.email();
+            data.push(obj);
+        }
+
+        var output = document.getElementById('output');
+        data.forEach(function (item) {
+            var row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.id}</td>
+                <td>${item.name}</td>
+                <td>${item.email}</td>
+            `;
+            output.appendChild(row);
+        });
+
+        var dataTable = $('#dataTable').DataTable();
+
+        // Add individual search boxes for each column
+        $('#searchRow input').on('keyup change', function () {
+            dataTable.column($(this).parent().index() + ':visible').search(this.value).draw();
+        });
+
+        // Enable sorting for DataTables
+        dataTable.order([[0, 'asc']]);
+
+        // Add event listener for the download button
+        document.querySelector('#downloadButton').addEventListener('click', function (event) {
+            event.preventDefault();
+            var jsonOutput = JSON.stringify(data, null, 2);
+            var blob = new Blob([jsonOutput], { type: 'application/json' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'fake_data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+
+</html>
